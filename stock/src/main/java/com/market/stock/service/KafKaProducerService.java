@@ -13,9 +13,17 @@ public class KafKaProducerService {
 
 	private static final Logger logger = LoggerFactory.getLogger(KafKaProducerService.class);
 
-	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
+	
+	@Autowired
+    public KafKaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
 
+    }
+	
+	/*
+	 * @Autowired private KafkaTemplate<String, Stock> kafkaTemplate;
+	 */
 	public void sendMessage(String message) {
 		logger.info(String.format("Message sent -> %s", message));
 		this.kafkaTemplate.send(CommonConstants.TOPIC_NAME, message);
