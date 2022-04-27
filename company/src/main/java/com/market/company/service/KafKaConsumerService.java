@@ -12,7 +12,7 @@ public class KafKaConsumerService {
 
 	private final Logger logger = LoggerFactory.getLogger(KafKaConsumerService.class);
 
-	@KafkaListener(topics = CommonConstants.TOPIC_NAME, groupId = CommonConstants.GROUP_ID)
+	@KafkaListener(topics = CommonConstants.TOPIC_NAME, groupId = CommonConstants.GROUP_ID, containerFactory = "userKakfaListenerFactory")
 	public void consume(String message) {
 		logger.info(String.format("Message recieved -> %s", message));
 	}
