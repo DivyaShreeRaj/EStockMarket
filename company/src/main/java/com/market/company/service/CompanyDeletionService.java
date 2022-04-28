@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 import com.market.company.controller.CompanyDeletionController;
 import com.market.company.exception.CustomRuntimeException;
 import com.market.company.repository.CompanyRepository;
+import com.market.company.repository.StockRepository;
 
 @Service
 public class CompanyDeletionService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+	
+	@Autowired
+	private StockRepository stockRepository;
 
 	private Logger log = LoggerFactory.getLogger(CompanyDeletionService.class);
 
@@ -24,8 +28,10 @@ public class CompanyDeletionService {
 		log.info("Inside CompanyDeletionService service with company code: {}", companyCode);
 
 		try {
+			stockRepository.deleteByCompanyCode(companyCode);
 			companyRepository.deleteByCompanyCode(companyCode);
 		} catch (Exception e) {
+			log.error("Exception while deleting company details with code:{} DESC:{}", companyCode, e.getMessage());
 			throw new CustomRuntimeException("Something went wrong while trying to delete a company", e);
 		}
 

@@ -26,10 +26,8 @@ public class CompanyRegistrationController {
 	@PostMapping(value = "/register")
 	public ResponseEntity<String> registerCompany(
 			@Valid @RequestBody CompanyRegistrationRequest companyRegistrationRequest) {
-
 		log.debug("Inside registerCompany() of CompanyRegistrationController");
-
 		return companyRegistrationService.registerCompany(companyRegistrationRequest);
-
 	}
+	
 }

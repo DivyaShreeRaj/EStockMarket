@@ -4,7 +4,9 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.mongodb.core.mapping.Field;
+//import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,28 +17,34 @@ import lombok.NoArgsConstructor;
 public class CompanyRegistrationRequest {
 
 	@NotBlank(message = "Company code cannot be null and must be unique")
-	@Field("companyCode")
+	//@Field("companyCode")
+	@JsonProperty("companyCode")
 	private String companyCode;
 
 	@NotBlank(message = "Company Name cannot be null")
-	@Field("companyName")
+	//@Field("companyName")
+	@JsonProperty("companyName")
 	private String companyName;
 
 	@NotBlank(message = "Company CEO cannot be null")
-	@Field("companyCEO")
+	//@Field("companyCEO")
+	@JsonProperty("companyCEO")
 	private String companyCEO;
 
 	@NotNull(message = "Company Turnover cannot be null")
 	@DecimalMin(value = "100000001.00", message = "Company turnover must be greater than 10Cr")
-	@Field("companyTurnOver")
+	//@Field("companyTurnOver")
+	@JsonProperty("companyTurnOver")
 	private Double companyTurnOver;
 
 	@NotBlank(message = "Company website cannot be null")
-	@Field("companyWebsite")
+	//@Field("companyWebsite")
+	@JsonProperty("companyWebsite")
 	private String companyWebsite;
 
 	@NotNull(message = "Company stock exchange cannot be null")
-	@Field("stockExchange")
+	//@Field("stockExchange")
+	@JsonProperty("stockExchange")
 	private String stockExchange;
 
 	public String getCompanyCode() {
