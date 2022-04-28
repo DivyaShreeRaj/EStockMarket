@@ -1,5 +1,5 @@
-package com.market.stock.domain;
 
+package com.market.stock.domain;
 
 import java.sql.Time;
 import java.util.Date;
@@ -16,9 +16,9 @@ import javax.persistence.Table;
 public class Stock {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "stock_id")
-	private Integer Id;
+	private Integer id;
 
 	@Column(name = "company_code")
 	private String companyCode;
@@ -38,12 +38,23 @@ public class Stock {
 	@Column(name = "stock_end_time")
 	private Time stockEndTime;
 
+	/*
+	 * @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade=
+	 * CascadeType.ALL)
+	 * 
+	 * @JoinColumn(name = "company_code")//, nullable = false)
+	 * 
+	 * @OnDelete(action = OnDeleteAction.CASCADE)
+	 * 
+	 * @JsonIgnore private Company companyObj;
+	 */
+
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(Integer id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getCompanyCode() {
@@ -94,10 +105,16 @@ public class Stock {
 		this.stockEndTime = stockEndTime;
 	}
 
+	/*
+	 * public Company getCompany() { return companyObj; }
+	 * 
+	 * public void setCompany(Company company) { this.companyObj = company; }
+	 */
+
 	public Stock(Integer id, String companyCode, Double stockPrice, Date stockStartDate, Date stockEndDate,
 			Time stockStartTime, Time stockEndTime) {
 		super();
-		Id = id;
+		this.id = id;
 		this.companyCode = companyCode;
 		this.stockPrice = stockPrice;
 		this.stockStartDate = stockStartDate;
@@ -106,9 +123,17 @@ public class Stock {
 		this.stockEndTime = stockEndTime;
 	}
 
+	/*
+	 * public Stock(Integer id, Double stockPrice, Date stockStartDate, Date
+	 * stockEndDate, Time stockStartTime, Time stockEndTime, Company company) {
+	 * super(); this.id = id; // this.companyCode = companyCode; this.stockPrice =
+	 * stockPrice; this.stockStartDate = stockStartDate; this.stockEndDate =
+	 * stockEndDate; this.stockStartTime = stockStartTime; this.stockEndTime =
+	 * stockEndTime; this.companyObj = company; }
+	 */
+
 	public Stock() {
 		super();
 	}
-	
 
 }
