@@ -1,43 +1,47 @@
 package com.market.company.events;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 //@AllArgsConstructor
 //@NoArgsConstructor
 @Data
+@Builder
 @Getter
 @Setter
-public class CompanyRegisteredEvent{ // extends BaseEvent<String> {
-
-	public /* final */ String companyCode;
-
-	public /* final */ String companyName;
-
-	public /* final */ String companyCEO;
-
-	public /* final */ Double companyTurnOver;
-
-	public /* final */ String companyWebsite;
-
-	public /* final */ String stockExchange;
+public class CompanyRegisteredEvent{ 
+	
+	private Long id;
+	private String companyCode;
+	private String companyName;
+	private String companyCEO;
+	private Double companyTurnOver;
+	private String companyWebsite;
+	private String stockExchange;
 
 	public CompanyRegisteredEvent() {
 		
 	}
 
-	public CompanyRegisteredEvent(String id, String companyCode, String companyName, String companyCEO,
+	public CompanyRegisteredEvent(Long id, String companyCode, String companyName, String companyCEO,
 			Double companyTurnOver, String companyWebsite, String stockExchange) {
-		//super(id);
+		this.id = id;
 		this.companyCode = companyCode;
 		this.companyName = companyName;
 		this.companyCEO = companyCEO;
 		this.companyTurnOver = companyTurnOver;
 		this.companyWebsite = companyWebsite;
 		this.stockExchange = stockExchange;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getCompanyCode() {
@@ -87,7 +91,5 @@ public class CompanyRegisteredEvent{ // extends BaseEvent<String> {
 	public void setStockExchange(String stockExchange) {
 		this.stockExchange = stockExchange;
 	}
-	
-	
 
 }
