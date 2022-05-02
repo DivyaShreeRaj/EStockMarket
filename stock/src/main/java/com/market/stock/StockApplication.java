@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.axonframework.config.EventProcessingConfigurer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import com.market.stock.exception.StockServiceEventsErrorHandler;
 
 @SpringBootApplication
 public class StockApplication {
@@ -40,4 +43,11 @@ public class StockApplication {
 	public KafkaTemplate<String, String> kafkaTemplate() {
 		return new KafkaTemplate<>(produceFactory());
 	}
+
+	@Autowired
+	public void configure(EventProcessingConfigurer configurer) {
+		configurer.registerListenerInvocationErrorHandler("stock",
+				configuration -> new StockServiceEventsErrorHandler());
+	}
+
 }
