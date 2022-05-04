@@ -8,8 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.market.stock.commands.AddStockCommand;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping(value = "/api/v1.0/market/stock/")
+@Tag(name = "Stock Commands", description = "This is a controller for command operations on Stock Resource")
 public class StockCommandController {
 
 	private CommandGateway commandGateway;
@@ -18,8 +25,13 @@ public class StockCommandController {
 		this.commandGateway = commandGateway;
 	}
 	
+	@Operation(summary = "Add Stocks to provided Company")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "500", description = "Bad Request"),
+			@ApiResponse(responseCode = "404", description = "Not found") })
 	@PostMapping("add/{companycode}")
-	public String addStocks(@RequestParam String companycode, Double stockPrice) {
+	public String addStocks(@RequestParam @Parameter(description = "Company code", example = "Code1")
+	String companycode, @Parameter(description = "Stock Price", example = "100.00") Double stockPrice) {
 		
 		AddStockCommand addStockCommand = new AddStockCommand(companycode,stockPrice);
 		
