@@ -1,4 +1,4 @@
-package com.market.stock.service;
+package com.market.stock.commands.eventhandler;
 
 import java.sql.Time;
 import java.time.Instant;
@@ -6,26 +6,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.axonframework.config.ProcessingGroup;
+import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import com.market.stock.commands.events.StockAdditionEvent;
 import com.market.stock.domain.Stock;
 import com.market.stock.exception.CustomRuntimeException;
-import com.market.stock.repository.CompanyRepository;
 import com.market.stock.repository.StockRepository;
 
-
-
-@Service
-public class StockManagementService {
+@Component
+@ProcessingGroup("stock")
+public class StockAdditionCommandHandler {
 
 	@Autowired
 	private StockRepository stockRepository;
-
-	@Autowired
-	private CompanyRepository companyRepository;
-
-	public void addStock(String companyCode, Double stockPrice) {
+	
+	@EventHandler
+	public void addStock(StockAdditionEvent stockAdditionEvent) {
 
 		try {
 			GregorianCalendar gcalendar = new GregorianCalendar();
@@ -33,9 +32,8 @@ public class StockManagementService {
 					gcalendar.get(Calendar.SECOND));
 
 			Stock stock = new Stock();
-			stock.setCompanyCode(companyCode);
-
-			stock.setStockPrice(stockPrice);
+			stock.setCompanyCode(stockAdditionEvent.getCompanyCode());
+			stock.setStockPrice(stockAdditionEvent.getStockPrice());
 			stock.setStockStartDate(Time.from(Instant.now()));
 			stock.setStockEndDate(new Date());
 			stock.setStockStartTime(t);
@@ -49,5 +47,5 @@ public class StockManagementService {
 		}
 
 	}
-
+	
 }

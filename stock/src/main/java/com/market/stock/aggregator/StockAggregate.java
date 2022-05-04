@@ -12,7 +12,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
 import com.market.stock.commands.AddStockCommand;
-import com.market.stock.event.StockAdditionEvent;
+import com.market.stock.commands.events.StockAdditionEvent;
 
 @Aggregate
 public class StockAggregate {
