@@ -22,9 +22,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping(value = "/api/v1.0/market/company/")
+@Tag(name = "Company Query", description = "This is a controller for query operations on Company Resource")
 public class CompanyQueryController {
 
 	private Logger log = LoggerFactory.getLogger(CompanyQueryController.class);
@@ -50,6 +52,10 @@ public class CompanyQueryController {
 	}
 
 	@Operation(summary = "Get All the Company details")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "500", description = "Bad Request"),
+			@ApiResponse(responseCode = "404", description = "Not found") })
+	
 	@GetMapping(value = "getall")
 	public @ResponseBody List<CompanyInfoResponse> getallCompanyDetails() {
 		log.debug("Inside getallCompanyDetails() of CompanyQueryController");

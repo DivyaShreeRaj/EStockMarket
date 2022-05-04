@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompanyRegistrationRequest {
-
+	
 	@NotBlank(message = "Company code cannot be null and must be unique")
 	//@Field("companyCode")
 	@JsonProperty("companyCode")

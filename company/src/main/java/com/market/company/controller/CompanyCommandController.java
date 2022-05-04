@@ -9,7 +9,6 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +19,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.market.company.commands.DeleteCompanyCommand;
 import com.market.company.commands.RegisterCompanyCommand;
+import com.market.company.domain.Company;
 import com.market.company.request.CompanyRegistrationRequest;
 import com.market.company.service.CompanyDeletionServiceImpl;
 import com.market.company.service.CompanyRegistrationServiceImpl;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/v1.0/market/company")
+@Tag(name = "Company Commands", description = "This is a controller for command operations on Company Resource")
 public class CompanyCommandController {
 
 	private Logger log = LoggerFactory.getLogger(CompanyCommandController.class);
@@ -43,7 +53,16 @@ public class CompanyCommandController {
 	}
 
 	@PostMapping(value = "/register")
-	public String registerCompany(@Valid @RequestBody CompanyRegistrationRequest companyRegistrationRequest) {
+	@Operation(summary = "Register new Company details")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "500", description = "Bad Request"),
+			@ApiResponse(responseCode = "404", description = "Not found") })
+	public String registerCompany(
+			@RequestBody /*
+							 * (description = "Company to add.", required = true, content = @Content(schema
+							 * = @Schema(implementation = CompanyRegistrationRequest.class)))
+							 */
+			@Valid CompanyRegistrationRequest companyRegistrationRequest) {
 		log.debug("Inside registerCompany() of CompanyCommandController");
 
 		RegisterCompanyCommand registerCompanyCommand = new RegisterCompanyCommand(
@@ -63,8 +82,13 @@ public class CompanyCommandController {
 	}
 
 	@DeleteMapping(value = "delete/{companyCode}")
+	@Operation(summary = "Delete Company details using company code")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "500", description = "Bad Request"),
+			@ApiResponse(responseCode = "404", description = "Not found") })
+
 	public @ResponseBody String deleteCompanyDetails(
-			@NotBlank(message = "Please provide the company code to proceed with Company deletion") @PathVariable String companyCode) {
+			@Parameter(description = "Company code", example = "Code1") @NotBlank(message = "Please provide the company code to proceed with Company deletion") @PathVariable String companyCode) {
 
 		DeleteCompanyCommand deleteCompanyCommand = new DeleteCompanyCommand(Long.valueOf(new Random().nextLong()),
 				companyCode);
@@ -72,7 +96,7 @@ public class CompanyCommandController {
 		log.debug("Inside deleteCompanyDetails() of CompanyCommandController");
 
 		try {
-			 return this.commandGateway.sendAndWait(deleteCompanyCommand);
+			return this.commandGateway.sendAndWait(deleteCompanyCommand);
 		} catch (Exception e) {
 			throw e;
 		}
