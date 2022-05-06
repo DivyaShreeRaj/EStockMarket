@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.market.stock.query.GetStocksQuery;
-import com.market.stock.response.StockResponse;
+import com.market.stock.response.StockMongoResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,18 +32,20 @@ public class StockQueryController {
 			@ApiResponse(responseCode = "500", description = "Bad Request"),
 			@ApiResponse(responseCode = "404", description = "Not found") })
 	@GetMapping(value = "get/{companycode}/{startdate}/{enddate}")
-	public StockResponse getAllStocksByDate(
+	public StockMongoResponse getAllStocksByDate(
 			@Parameter(description = "Company code", example = "Code1") @PathVariable String companycode, 
 			@Parameter(description = "Start Date", example = "2014-01-01") @PathVariable Date startdate,
 			@Parameter(description = "End Date", example = "2023-01-01") @PathVariable Date enddate) {
 
 		GetStocksQuery stocksQuery = new GetStocksQuery(companycode, startdate, enddate);
 
-		return queryGateway.query(stocksQuery, ResponseTypes.instanceOf(StockResponse.class)).join();
+		return queryGateway.query(stocksQuery, ResponseTypes.instanceOf(StockMongoResponse.class)).join();
 
 		// StockResponse stocks = stockInformationService.getStocksByDate(companycode,
 		// startdate, enddate);
 		// return new ResponseEntity<>(stocks, HttpStatus.OK);
 	}
+	
+	
 
 }
