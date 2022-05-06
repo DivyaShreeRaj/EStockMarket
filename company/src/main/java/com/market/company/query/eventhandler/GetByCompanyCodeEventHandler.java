@@ -1,5 +1,7 @@
 package com.market.company.query.eventhandler;
 
+import java.util.List;
+
 import org.axonframework.queryhandling.QueryHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,9 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.market.company.domain.Company;
+import com.market.company.domain.CompanyMongo;
+import com.market.company.domain.StockMongo;
 import com.market.company.exception.CompanyNotFoundException;
 import com.market.company.query.GetByCompanyCodeQuery;
+import com.market.company.repository.CompanyMongoRepository;
 import com.market.company.repository.CompanyRepository;
+import com.market.company.repository.StockMongoRepository;
 import com.market.company.repository.StockRepository;
 import com.market.company.response.CompanyInfoResponse;
 import com.market.company.service.CompanyInfoServiceImpl;
@@ -24,8 +30,43 @@ public class GetByCompanyCodeEventHandler {
 
 	@Autowired
 	private StockRepository stockRepository;
-
+	
+	@Autowired
+	private CompanyMongoRepository companyMongoRepository;
+	
+	@Autowired
+	private StockMongoRepository stockMongoRepository;
+	
 	@QueryHandler
+	public CompanyInfoResponse getCompanyDetailsV2(GetByCompanyCodeQuery getByCompanyCodeQuery) {
+
+		log.debug("Inside getCompanyDetails() of CompanyInfoServiceImpl");
+
+		CompanyInfoResponse companyInfoResponse = new CompanyInfoResponse();
+
+		CompanyMongo company = companyMongoRepository.findByCompanyCode(getByCompanyCodeQuery.getCompanyCode());
+		if (company == null) {
+			throw new CompanyNotFoundException();
+		}
+
+		companyInfoResponse.setCompanyCode(company.getCompanyCode());
+		companyInfoResponse.setCompanyName(company.getCompanyName());
+		companyInfoResponse.setCompanyCEO(company.getCompanyCEO());
+		companyInfoResponse.setCompanyTurnOver(company.getCompanyTurnOver());
+		companyInfoResponse.setCompanyWebsite(company.getCompanyWebsite());
+		companyInfoResponse.setStockExchange(company.getStockExchange());
+
+		List<StockMongo> stockPriceList = stockMongoRepository.getLatestStockPrice(getByCompanyCodeQuery.getCompanyCode());
+		
+		if(stockPriceList != null && !stockPriceList.isEmpty()) {
+			companyInfoResponse
+			.setLatestStockPrice(stockPriceList.get(0).getStockPrice());
+		}
+
+		return companyInfoResponse;
+	}
+
+	//@QueryHandler
 	public CompanyInfoResponse getCompanyDetails(GetByCompanyCodeQuery getByCompanyCodeQuery) {
 
 		log.debug("Inside getCompanyDetails() of CompanyInfoServiceImpl");

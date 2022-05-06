@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Document("company")
 public class CompanyMongo {
@@ -20,6 +20,8 @@ public class CompanyMongo {
 	// @MongoId() // @Indexed(unique = true)
 
 	@Id
+	private String id;
+	
 	private String companyCode;
 
 	private String companyName;
@@ -31,6 +33,14 @@ public class CompanyMongo {
 	private String companyWebsite;
 
 	private String stockExchange;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getCompanyCode() {
 		return companyCode;
@@ -79,5 +89,18 @@ public class CompanyMongo {
 	public void setStockExchange(String stockExchange) {
 		this.stockExchange = stockExchange;
 	}
+
+	public CompanyMongo(String id, String companyCode, String companyName, String companyCEO, Double companyTurnOver,
+			String companyWebsite, String stockExchange) {
+		super();
+		this.id = id;
+		this.companyCode = companyCode;
+		this.companyName = companyName;
+		this.companyCEO = companyCEO;
+		this.companyTurnOver = companyTurnOver;
+		this.companyWebsite = companyWebsite;
+		this.stockExchange = stockExchange;
+	}
+	
 
 }

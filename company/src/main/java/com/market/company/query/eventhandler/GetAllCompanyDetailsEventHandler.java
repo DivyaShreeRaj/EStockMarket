@@ -13,10 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.market.company.domain.Company;
+import com.market.company.domain.CompanyMongo;
 import com.market.company.domain.Stock;
+import com.market.company.domain.StockMongo;
 import com.market.company.exception.CustomRuntimeException;
 import com.market.company.query.GetAllCompanyQuery;
+import com.market.company.repository.CompanyMongoRepository;
 import com.market.company.repository.CompanyRepository;
+import com.market.company.repository.StockMongoRepository;
 import com.market.company.repository.StockRepository;
 import com.market.company.response.CompanyInfoResponse;
 import com.market.company.service.CompanyInfoServiceImpl;
@@ -31,8 +35,68 @@ public class GetAllCompanyDetailsEventHandler {
 
 	@Autowired
 	private StockRepository stockRepository;
-
+	
+	@Autowired
+	private CompanyMongoRepository companyMongoRepository;
+	
+	@Autowired
+	private StockMongoRepository stockMongoRepository;
+	
 	@QueryHandler
+	public List<CompanyInfoResponse> getallCompanyDetailsV2(GetAllCompanyQuery getAllCompanyQuery) {
+
+		log.debug("Inside getAllCompanyDetails() of CompanyInfoServiceImpl");
+
+		List<CompanyInfoResponse> companyInfoResponseList = new ArrayList<>();
+
+		try {
+
+			List<CompanyMongo> companies = companyMongoRepository.findAll();
+
+			List<StockMongo> stocks = stockMongoRepository.findAll();
+
+			for (CompanyMongo company : companies) {
+				CompanyInfoResponse companyInfoResponse = new CompanyInfoResponse();
+
+				companyInfoResponse.setCompanyCode(company.getCompanyCode());
+				companyInfoResponse.setCompanyName(company.getCompanyName());
+				companyInfoResponse.setCompanyCEO(company.getCompanyCEO());
+				companyInfoResponse.setCompanyTurnOver(company.getCompanyTurnOver());
+				companyInfoResponse.setCompanyWebsite(company.getCompanyWebsite());
+				companyInfoResponse.setStockExchange(company.getStockExchange());
+
+				if (stocks != null && !stocks.isEmpty()) {
+
+					List<StockMongo> latestStockDates = stocks.stream()
+							.filter(s -> s.getCompanyCode().equals(company.getCompanyCode()))
+							.sorted(Comparator.comparing(StockMongo::getStockStartDate).reversed())
+							.collect(Collectors.toList());
+
+					if (latestStockDates != null && !latestStockDates.isEmpty()) {
+						Date latestStockDate = latestStockDates.get(0).getStockStartDate();
+						Double latestStockPrice = latestStockDates.stream()
+								.filter(s -> s.getStockStartDate().equals(latestStockDate))
+								.sorted(Comparator.comparing(StockMongo::getStockStartTime).reversed())
+								.map(s -> s.getStockPrice()).limit(1).findFirst().get();
+
+						companyInfoResponse.setLatestStockPrice(latestStockPrice);
+					}
+				}
+
+				// companyInfoResponse.setLatestStockPrice(stockRepository.getLatestStockPrice(company.getCompanyCode()));
+
+				companyInfoResponseList.add(companyInfoResponse);
+			}
+
+		} catch (Exception e) {
+			log.error("Exception occurred in getAllCompanyDetails() of CompanyInfoService DESC:{}", e.getMessage());
+			throw new CustomRuntimeException("Something went wrong while trying to get all the company details", e);
+		}
+
+		return companyInfoResponseList;
+	}
+
+	//@QueryHandler
 	public List<CompanyInfoResponse> getallCompanyDetails(GetAllCompanyQuery getAllCompanyQuery) {
 
 		log.debug("Inside getAllCompanyDetails() of CompanyInfoServiceImpl");
