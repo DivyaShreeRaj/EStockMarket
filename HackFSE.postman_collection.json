@@ -1,0 +1,172 @@
+{
+	"info": {
+		"_postman_id": "7d313588-7b5f-4028-a0ab-73a9ac8ea62d",
+		"name": "HackFSE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "Get by CompanyCode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1.0/market/company/info/code4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1.0",
+								"market",
+								"company",
+								"info",
+								"code4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register company",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"companyCode\": \"code4\",\r\n    \"companyName\": \"name4\",\r\n    \"companyCEO\": \"ceo4\",\r\n    \"companyTurnOver\": 100000001.00,\r\n    \"companyWebsite\": \"site1webcom\",\r\n    \"stockExchange\": \"BSE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1.0/market/company/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1.0",
+								"market",
+								"company",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Companies",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCompanyDetails",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1.0/market/company/delete/code2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1.0",
+								"market",
+								"company",
+								"delete",
+								"code2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stocks",
+			"item": [
+				{
+					"name": "Add Stock",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "companycode",
+									"value": "code1",
+									"type": "text"
+								},
+								{
+									"key": "stockPrice",
+									"value": "150.99",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/v1.0/market/stock/add/code1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1.0",
+								"market",
+								"stock",
+								"add",
+								"code1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Stocks by Dates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/v1.0/market/stock/get/Code3/2014-01-01/2016-01-01",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1.0",
+								"market",
+								"stock",
+								"get",
+								"Code3",
+								"2014-01-01",
+								"2016-01-01"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
