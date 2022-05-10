@@ -1,12 +1,26 @@
-package com.market.company.response;
 
-/**
- * CompanyInfoResponse
- * 
- * @author User
- *
- */
-public class CompanyInfoResponse {
+package com.market.company.domain;
+
+import javax.persistence.Id;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+//@AllArgsConstructor
+//@NoArgsConstructor
+@Document("company")
+public class CompanyDocument {
+
+	// @MongoId() // @Indexed(unique = true)
+
+	@Id
+	private String id;
 
 	private String companyCode;
 
@@ -20,7 +34,13 @@ public class CompanyInfoResponse {
 
 	private String stockExchange;
 
-	private Double latestStockPrice;
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getCompanyCode() {
 		return companyCode;
@@ -70,28 +90,20 @@ public class CompanyInfoResponse {
 		this.stockExchange = stockExchange;
 	}
 
-	public Double getLatestStockPrice() {
-		return latestStockPrice;
-	}
-
-	public void setLatestStockPrice(Double latestStockPrice) {
-		this.latestStockPrice = latestStockPrice;
-	}
-
-	public CompanyInfoResponse(String companyCode, String companyName, String companyCEO, Double companyTurnOver,
-			String companyWebsite, String stockExchange, Double latestStockPrice) {
+	public CompanyDocument(String id, String companyCode, String companyName, String companyCEO, Double companyTurnOver,
+			String companyWebsite, String stockExchange) {
 		super();
+		this.id = id;
 		this.companyCode = companyCode;
 		this.companyName = companyName;
 		this.companyCEO = companyCEO;
 		this.companyTurnOver = companyTurnOver;
 		this.companyWebsite = companyWebsite;
 		this.stockExchange = stockExchange;
-		this.latestStockPrice = latestStockPrice;
 	}
 
-	public CompanyInfoResponse() {
-		super();
+	public CompanyDocument() {
+
 	}
 
 }

@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.market.company.domain.Company;
-import com.market.company.domain.CompanyMongo;
-import com.market.company.domain.StockMongo;
+import com.market.company.domain.CompanyDocument;
+import com.market.company.domain.StockDocument;
 import com.market.company.exception.CompanyNotFoundException;
 import com.market.company.query.GetByCompanyCodeQuery;
 import com.market.company.repository.CompanyMongoRepository;
@@ -18,25 +18,30 @@ import com.market.company.repository.CompanyRepository;
 import com.market.company.repository.StockMongoRepository;
 import com.market.company.repository.StockRepository;
 import com.market.company.response.CompanyInfoResponse;
-import com.market.company.service.CompanyInfoServiceImpl;
 
 @Component
 public class GetByCompanyCodeEventHandler {
 
-	private final Logger log = LoggerFactory.getLogger(CompanyInfoServiceImpl.class);
+	private final Logger log = LoggerFactory.getLogger(GetByCompanyCodeEventHandler.class);
 
 	@Autowired
 	private CompanyRepository companyRepository;
 
 	@Autowired
 	private StockRepository stockRepository;
-	
+
 	@Autowired
 	private CompanyMongoRepository companyMongoRepository;
-	
+
 	@Autowired
 	private StockMongoRepository stockMongoRepository;
-	
+
+	/**
+	 * getCompanyDetailsV2 - Get details of provided company code from MongoDB Atlas
+	 * 
+	 * @param getByCompanyCodeQuery getByCompanyCodeQuery
+	 * @return CompanyInfoResponse
+	 */
 	@QueryHandler
 	public CompanyInfoResponse getCompanyDetailsV2(GetByCompanyCodeQuery getByCompanyCodeQuery) {
 
@@ -44,9 +49,11 @@ public class GetByCompanyCodeEventHandler {
 
 		CompanyInfoResponse companyInfoResponse = new CompanyInfoResponse();
 
-		CompanyMongo company = companyMongoRepository.findByCompanyCode(getByCompanyCodeQuery.getCompanyCode());
+		CompanyDocument company = companyMongoRepository.findByCompanyCode(getByCompanyCodeQuery.getCompanyCode());
 		if (company == null) {
-			throw new CompanyNotFoundException();
+			log.error("Company details not found");
+			return companyInfoResponse;
+			// throw new CompanyNotFoundException();
 		}
 
 		companyInfoResponse.setCompanyCode(company.getCompanyCode());
@@ -56,17 +63,23 @@ public class GetByCompanyCodeEventHandler {
 		companyInfoResponse.setCompanyWebsite(company.getCompanyWebsite());
 		companyInfoResponse.setStockExchange(company.getStockExchange());
 
-		List<StockMongo> stockPriceList = stockMongoRepository.getLatestStockPrice(getByCompanyCodeQuery.getCompanyCode());
-		
-		if(stockPriceList != null && !stockPriceList.isEmpty()) {
-			companyInfoResponse
-			.setLatestStockPrice(stockPriceList.get(0).getStockPrice());
+		List<StockDocument> stockPriceList = stockMongoRepository
+				.getLatestStockPrice(getByCompanyCodeQuery.getCompanyCode());
+
+		if (stockPriceList != null && !stockPriceList.isEmpty()) {
+			companyInfoResponse.setLatestStockPrice(stockPriceList.get(0).getStockPrice());
 		}
 
 		return companyInfoResponse;
 	}
 
-	//@QueryHandler
+	/**
+	 * getCompanyDetails - not in use, this will read company details from mysql
+	 * 
+	 * @param getByCompanyCodeQuery getByCompanyCodeQuery
+	 * @return CompanyInfoResponse
+	 */
+	// @QueryHandler
 	public CompanyInfoResponse getCompanyDetails(GetByCompanyCodeQuery getByCompanyCodeQuery) {
 
 		log.debug("Inside getCompanyDetails() of CompanyInfoServiceImpl");

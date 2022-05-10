@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,16 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.market.company.commands.DeleteCompanyCommand;
 import com.market.company.commands.RegisterCompanyCommand;
-import com.market.company.domain.Company;
 import com.market.company.request.CompanyRegistrationRequest;
-import com.market.company.service.CompanyDeletionServiceImpl;
-import com.market.company.service.CompanyRegistrationServiceImpl;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,12 +32,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class CompanyCommandController {
 
 	private Logger log = LoggerFactory.getLogger(CompanyCommandController.class);
-
-	@Autowired
-	private CompanyRegistrationServiceImpl companyRegistrationService;
-
-	@Autowired
-	private CompanyDeletionServiceImpl companyDeletionService;
 
 	private CommandGateway commandGateway;
 
@@ -57,12 +44,7 @@ public class CompanyCommandController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "500", description = "Bad Request"),
 			@ApiResponse(responseCode = "404", description = "Not found") })
-	public String registerCompany(
-			@RequestBody /*
-							 * (description = "Company to add.", required = true, content = @Content(schema
-							 * = @Schema(implementation = CompanyRegistrationRequest.class)))
-							 */
-			@Valid CompanyRegistrationRequest companyRegistrationRequest) {
+	public String registerCompany(@RequestBody @Valid CompanyRegistrationRequest companyRegistrationRequest) {
 		log.debug("Inside registerCompany() of CompanyCommandController");
 
 		RegisterCompanyCommand registerCompanyCommand = new RegisterCompanyCommand(

@@ -13,41 +13,46 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * CompanyRegistrationRequest
+ * 
+ * @author User
+ *
+ */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompanyRegistrationRequest {
-	
+
 	@NotBlank(message = "Company code cannot be null and must be unique")
-	//@Field("companyCode")
+	// @Field("companyCode")
 	@JsonProperty("companyCode")
 	private String companyCode;
 
 	@NotBlank(message = "Company Name cannot be null")
-	//@Field("companyName")
+	// @Field("companyName")
 	@JsonProperty("companyName")
 	private String companyName;
 
 	@NotBlank(message = "Company CEO cannot be null")
-	//@Field("companyCEO")
+	// @Field("companyCEO")
 	@JsonProperty("companyCEO")
 	private String companyCEO;
 
 	@NotNull(message = "Company Turnover cannot be null")
 	@DecimalMin(value = "100000001.00", message = "Company turnover must be greater than 10Cr")
-	//@Field("companyTurnOver")
+	// @Field("companyTurnOver")
 	@JsonProperty("companyTurnOver")
 	private Double companyTurnOver;
 
 	@NotBlank(message = "Company website cannot be null")
-	//@Field("companyWebsite")
+	// @Field("companyWebsite")
 	@JsonProperty("companyWebsite")
 	private String companyWebsite;
 
 	@NotNull(message = "Company stock exchange cannot be null")
-	//@Field("stockExchange")
+	// @Field("stockExchange")
 	@JsonProperty("stockExchange")
 	private String stockExchange;
 

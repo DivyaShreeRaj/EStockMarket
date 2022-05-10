@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.market.company.domain.Company;
-import com.market.company.domain.CompanyMongo;
+import com.market.company.domain.CompanyDocument;
 import com.market.company.domain.Stock;
-import com.market.company.domain.StockMongo;
+import com.market.company.domain.StockDocument;
 import com.market.company.exception.CustomRuntimeException;
 import com.market.company.query.GetAllCompanyQuery;
 import com.market.company.repository.CompanyMongoRepository;
@@ -23,25 +23,30 @@ import com.market.company.repository.CompanyRepository;
 import com.market.company.repository.StockMongoRepository;
 import com.market.company.repository.StockRepository;
 import com.market.company.response.CompanyInfoResponse;
-import com.market.company.service.CompanyInfoServiceImpl;
 
 @Component
 public class GetAllCompanyDetailsEventHandler {
 
-	private final Logger log = LoggerFactory.getLogger(CompanyInfoServiceImpl.class);
+	private final Logger log = LoggerFactory.getLogger(GetAllCompanyDetailsEventHandler.class);
 
 	@Autowired
 	private CompanyRepository companyRepository;
 
 	@Autowired
 	private StockRepository stockRepository;
-	
+
 	@Autowired
 	private CompanyMongoRepository companyMongoRepository;
-	
+
 	@Autowired
 	private StockMongoRepository stockMongoRepository;
-	
+
+	/**
+	 * getallCompanyDetailsV2 - Read all the company details from MongoDB Atlas
+	 * 
+	 * @param getAllCompanyQuery
+	 * @return List<CompanyInfoResponse>
+	 */
 	@QueryHandler
 	public List<CompanyInfoResponse> getallCompanyDetailsV2(GetAllCompanyQuery getAllCompanyQuery) {
 
@@ -51,11 +56,11 @@ public class GetAllCompanyDetailsEventHandler {
 
 		try {
 
-			List<CompanyMongo> companies = companyMongoRepository.findAll();
+			List<CompanyDocument> companies = companyMongoRepository.findAll();
 
-			List<StockMongo> stocks = stockMongoRepository.findAll();
+			List<StockDocument> stocks = stockMongoRepository.findAll();
 
-			for (CompanyMongo company : companies) {
+			for (CompanyDocument company : companies) {
 				CompanyInfoResponse companyInfoResponse = new CompanyInfoResponse();
 
 				companyInfoResponse.setCompanyCode(company.getCompanyCode());
@@ -67,16 +72,16 @@ public class GetAllCompanyDetailsEventHandler {
 
 				if (stocks != null && !stocks.isEmpty()) {
 
-					List<StockMongo> latestStockDates = stocks.stream()
+					List<StockDocument> latestStockDates = stocks.stream()
 							.filter(s -> s.getCompanyCode().equals(company.getCompanyCode()))
-							.sorted(Comparator.comparing(StockMongo::getStockStartDate).reversed())
+							.sorted(Comparator.comparing(StockDocument::getStockStartDate).reversed())
 							.collect(Collectors.toList());
 
 					if (latestStockDates != null && !latestStockDates.isEmpty()) {
 						Date latestStockDate = latestStockDates.get(0).getStockStartDate();
 						Double latestStockPrice = latestStockDates.stream()
 								.filter(s -> s.getStockStartDate().equals(latestStockDate))
-								.sorted(Comparator.comparing(StockMongo::getStockStartTime).reversed())
+								.sorted(Comparator.comparing(StockDocument::getStockStartTime).reversed())
 								.map(s -> s.getStockPrice()).limit(1).findFirst().get();
 
 						companyInfoResponse.setLatestStockPrice(latestStockPrice);
@@ -96,7 +101,13 @@ public class GetAllCompanyDetailsEventHandler {
 		return companyInfoResponseList;
 	}
 
-	//@QueryHandler
+	/**
+	 * getallCompanyDetails - not in use, this will read company details from mysql
+	 * 
+	 * @param getAllCompanyQuery
+	 * @return
+	 */
+	// @QueryHandler
 	public List<CompanyInfoResponse> getallCompanyDetails(GetAllCompanyQuery getAllCompanyQuery) {
 
 		log.debug("Inside getAllCompanyDetails() of CompanyInfoServiceImpl");

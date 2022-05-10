@@ -2,7 +2,6 @@ package com.market.company;
 
 import org.axonframework.config.EventProcessingConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +12,12 @@ import com.market.company.exception.CompanyServiceEventsErrorHandler;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
+/**
+ * CompanyApplication
+ * 
+ * @author User
+ *
+ */
 @SpringBootApplication
 @EnableMongoRepositories
 public class CompanyApplication {
@@ -26,11 +31,12 @@ public class CompanyApplication {
 		configurer.registerListenerInvocationErrorHandler("company",
 				configuration -> new CompanyServiceEventsErrorHandler());
 	}
-	
+
 	@Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI().info(new Info().title("Company Management Service")
-            .description("Company Management Service"));
-    }
+	public OpenAPI customOpenAPI() {
+		return new OpenAPI().info(new Info().title("Company Management Service").description(
+				"This microservice handles operations related to company such as Company registration, Company deletion, "
+						+ "Retrieve company details by company code, Retrieve all company details. "));
+	}
 
 }

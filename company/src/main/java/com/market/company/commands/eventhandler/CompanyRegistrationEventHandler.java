@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.market.company.commands.events.CompanyRegisteredEvent;
 import com.market.company.domain.Company;
 import com.market.company.exception.CustomRuntimeException;
-import com.market.company.exception.DuplicateCompanyRegistrationException;
+import com.market.company.kafka.producer.KafkaCompanyRegistrationProducerService;
 import com.market.company.repository.CompanyRepository;
 
 @Component
@@ -23,6 +23,9 @@ public class CompanyRegistrationEventHandler {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+
+	@Autowired
+	private KafkaCompanyRegistrationProducerService kafkaCompanyProducerService;
 
 	@EventHandler
 	public String registerCompany(CompanyRegisteredEvent companyRegisteredEvent) throws Exception {
@@ -53,11 +56,17 @@ public class CompanyRegistrationEventHandler {
 					 */
 
 					companyRepository.save(company);
-					// mongoTemplate.save(company); // updates if already exists
-					// mongoTemplate.insert(companyRegistrationRequest); // throws exception if null
-					// obj , already exists
+
+					// calling Kafka producer
+					kafkaCompanyProducerService.sendMessage(company);
+
 				} catch (Exception e) {
-					throw new CustomRuntimeException("Something went wrong while trying to register a company", e);
+
+					log.error("Something went wrong while trying to register a company" + e);
+					return "Something went wrong while trying to register a company";
+
+					// throw new CustomRuntimeException("Something went wrong while trying to
+					// register a company", e);
 				}
 			}
 
@@ -71,7 +80,10 @@ public class CompanyRegistrationEventHandler {
 
 		} else {
 
-			throw new CustomRuntimeException("Details of Company to be registered cannot be null");
+			log.error("Details of Company to be registered cannot be null");
+			return "Details of Company to be registered cannot be null";
+			// throw new CustomRuntimeException("Details of Company to be registered cannot
+			// be null");
 		}
 
 	}
