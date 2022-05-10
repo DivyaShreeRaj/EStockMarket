@@ -1,5 +1,11 @@
 package com.market.stock.exception;
 
+/**
+ * CompanyNotFoundException
+ * 
+ * @author User
+ *
+ */
 public class CompanyNotFoundException extends RuntimeException {
 
 	/**

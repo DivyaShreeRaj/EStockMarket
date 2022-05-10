@@ -1,5 +1,10 @@
 package com.market.stock.exception;
 
+/**
+ * CustomRuntimeException
+ * @author User
+ *
+ */
 public class CustomRuntimeException extends RuntimeException {
 
 	/**

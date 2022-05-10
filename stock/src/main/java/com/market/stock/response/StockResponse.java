@@ -4,6 +4,12 @@ import java.util.List;
 
 import com.market.stock.domain.Stock;
 
+/**
+ * StockResponse
+ * 
+ * @author User
+ *
+ */
 public class StockResponse {
 
 	public List<Stock> stocks;

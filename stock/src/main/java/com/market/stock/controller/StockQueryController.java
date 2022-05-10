@@ -19,6 +19,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * StockQueryController
+ * 
+ * @author User
+ *
+ */
 @RestController
 @RequestMapping(value = "/api/v1.0/market/stock/")
 @Tag(name = "Stock Query", description = "This is a controller for query operations on Stock Resource")
@@ -27,13 +33,21 @@ public class StockQueryController {
 	@Autowired
 	QueryGateway queryGateway;
 
+	/**
+	 * getAllStocksByDate
+	 * 
+	 * @param companycode companycode
+	 * @param startdate   startdate
+	 * @param enddate     enddate
+	 * @return StockMongoResponse
+	 */
 	@Operation(summary = "Get All Stocks By Date")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "500", description = "Bad Request"),
 			@ApiResponse(responseCode = "404", description = "Not found") })
 	@GetMapping(value = "get/{companycode}/{startdate}/{enddate}")
 	public StockMongoResponse getAllStocksByDate(
-			@Parameter(description = "Company code", example = "Code1") @PathVariable String companycode, 
+			@Parameter(description = "Company code", example = "Code1") @PathVariable String companycode,
 			@Parameter(description = "Start Date", example = "2014-01-01") @PathVariable Date startdate,
 			@Parameter(description = "End Date", example = "2023-01-01") @PathVariable Date enddate) {
 
@@ -45,7 +59,5 @@ public class StockQueryController {
 		// startdate, enddate);
 		// return new ResponseEntity<>(stocks, HttpStatus.OK);
 	}
-	
-	
 
 }

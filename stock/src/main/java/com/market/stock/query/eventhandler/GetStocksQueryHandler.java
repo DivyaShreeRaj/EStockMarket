@@ -1,6 +1,5 @@
 package com.market.stock.query.eventhandler;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,13 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.market.stock.domain.Stock;
-import com.market.stock.domain.StockMongo;
+import com.market.stock.domain.StockDocument;
 import com.market.stock.query.GetStocksQuery;
 import com.market.stock.repository.StockMongoRepository;
 import com.market.stock.repository.StockRepository;
 import com.market.stock.response.StockMongoResponse;
 import com.market.stock.response.StockResponse;
 
+/**
+ * GetStocksQueryHandler
+ * 
+ * @author User
+ *
+ */
 @Component
 public class GetStocksQueryHandler {
 
@@ -30,6 +35,12 @@ public class GetStocksQueryHandler {
 		return stockRepository.findAll();
 	}
 
+	/**
+	 * getStocksByDateV2 - Get stock details from MongoDB Atlas
+	 * 
+	 * @param getStocksQuery getStocksQuery
+	 * @return StockMongoResponse
+	 */
 	@QueryHandler
 	public StockMongoResponse getStocksByDateV2(GetStocksQuery getStocksQuery) {
 
@@ -39,7 +50,7 @@ public class GetStocksQueryHandler {
 		// stockMongoRepository.findByCompanyCode(getStocksQuery.getCompanyCode());
 		// List<StockMongo> stocks = new ArrayList<>();
 
-		List<StockMongo> stocks = stockMongoRepository.getStocksByDate(getStocksQuery.getCompanyCode(),
+		List<StockDocument> stocks = stockMongoRepository.getStocksByDate(getStocksQuery.getCompanyCode(),
 				getStocksQuery.getStartdate(), getStocksQuery.getEnddate());
 
 		/*
@@ -52,7 +63,7 @@ public class GetStocksQueryHandler {
 		 */
 
 		if (stocks != null && !stocks.isEmpty()) {
-			List<Double> stockPrices = stocks.stream().map(StockMongo::getStockPrice).collect(Collectors.toList());
+			List<Double> stockPrices = stocks.stream().map(StockDocument::getStockPrice).collect(Collectors.toList());
 
 			Double minStockPrice = stockPrices.stream().min(Comparator.naturalOrder()).get();
 			Double maxStockPrice = stockPrices.stream().max(Comparator.naturalOrder()).get();
@@ -67,6 +78,12 @@ public class GetStocksQueryHandler {
 		return response;
 	}
 
+	/**
+	 * getStocksByDate - NOT IN USE - Get Stock details from MySql
+	 * 
+	 * @param getStocksQuery getStocksQuery
+	 * @return StockResponse
+	 */
 	// @QueryHandler
 	public StockResponse getStocksByDate(GetStocksQuery getStocksQuery) {
 

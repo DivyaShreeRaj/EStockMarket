@@ -1,65 +1,49 @@
+
 package com.market.stock.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * Company
+ * CompanyDocument
+ * 
  * @author User
  *
  */
-@Entity
-@Table(name = "COMPANY")
-@AllArgsConstructor
+@Getter
+@Setter
+//@AllArgsConstructor
 @NoArgsConstructor
-public class Company {
+@Document("company")
+public class CompanyDocument {
+
+	// @MongoId() // @Indexed(unique = true)
 
 	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String id;
 
-	@Column(name = "company_code")
 	private String companyCode;
 
-	@Column(name = "company_name")
 	private String companyName;
 
-	@Column(name = "company_ceo")
 	private String companyCEO;
 
-	@Column(name = "company_turnover")
 	private Double companyTurnOver;
 
-	@Column(name = "company_website")
 	private String companyWebsite;
 
-	@Column(name = "stock_exchange")
 	private String stockExchange;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "company_code")
-	private List<Stock> stocks = new ArrayList<>();
-
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -108,6 +92,18 @@ public class Company {
 	}
 
 	public void setStockExchange(String stockExchange) {
+		this.stockExchange = stockExchange;
+	}
+
+	public CompanyDocument(String id, String companyCode, String companyName, String companyCEO, Double companyTurnOver,
+			String companyWebsite, String stockExchange) {
+		super();
+		this.id = id;
+		this.companyCode = companyCode;
+		this.companyName = companyName;
+		this.companyCEO = companyCEO;
+		this.companyTurnOver = companyTurnOver;
+		this.companyWebsite = companyWebsite;
 		this.stockExchange = stockExchange;
 	}
 

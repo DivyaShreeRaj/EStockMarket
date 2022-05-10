@@ -11,6 +11,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.ToString;
+
+/**
+ * Stock
+ * 
+ * @author User
+ *
+ */
+@ToString
 @Entity
 @Table(name = "STOCK")
 public class Stock {

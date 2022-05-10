@@ -2,11 +2,16 @@ package com.market.stock.response;
 
 import java.util.List;
 
-import com.market.stock.domain.StockMongo;
+import com.market.stock.domain.StockDocument;
 
+/**
+ * StockMongoResponse
+ * @author User
+ *
+ */
 public class StockMongoResponse {
 
-	public List<StockMongo> stocks;
+	public List<StockDocument> stocks;
 
 	public Double minStockPrice;
 
@@ -18,7 +23,7 @@ public class StockMongoResponse {
 		super();
 	}
 
-	public StockMongoResponse(List<StockMongo> stocks, Double minStockPrice, Double maxStockPrice, Double avgStockPrice) {
+	public StockMongoResponse(List<StockDocument> stocks, Double minStockPrice, Double maxStockPrice, Double avgStockPrice) {
 		super();
 		this.stocks = stocks;
 		this.minStockPrice = minStockPrice;
@@ -26,11 +31,11 @@ public class StockMongoResponse {
 		this.avgStockPrice = avgStockPrice;
 	}
 
-	public List<StockMongo> getStocks() {
+	public List<StockDocument> getStocks() {
 		return stocks;
 	}
 
-	public void setStocks(List<StockMongo> stocks) {
+	public void setStocks(List<StockDocument> stocks) {
 		this.stocks = stocks;
 	}
 

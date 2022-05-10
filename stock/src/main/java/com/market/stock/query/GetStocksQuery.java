@@ -2,6 +2,11 @@ package com.market.stock.query;
 
 import java.sql.Date;
 
+/**
+ * GetStocksQuery
+ * @author User
+ *
+ */
 public class GetStocksQuery {
 
 	private String companyCode;

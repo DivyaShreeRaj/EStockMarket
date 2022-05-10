@@ -5,10 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * CompanyGlobalExceptionHandler
+ * 
+ * @author User
+ *
+ */
 @ControllerAdvice
 public class CompanyGlobalExceptionHandler {
-
-	private static final String duplicateCompanyRegistrationMessage = "The Company you are trying to register already exists in the system.Please try registration with different company code";
 
 	private static final String companyNotFoundMessage = "The Company you are trying to search doesnt exists in the system";
 
