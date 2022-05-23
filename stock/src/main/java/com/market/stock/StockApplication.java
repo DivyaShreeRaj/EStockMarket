@@ -18,12 +18,23 @@ import io.swagger.v3.oas.models.info.Info;
  *
  */
 @SpringBootApplication
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class StockApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(StockApplication.class, args);
 	}
 
+	@Bean
+	public WebMvcConfigurer configurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");
+			}
+		};
+	}
+	
 	@Autowired
 	public void configure(EventProcessingConfigurer configurer) {
 		configurer.registerListenerInvocationErrorHandler("stock",
