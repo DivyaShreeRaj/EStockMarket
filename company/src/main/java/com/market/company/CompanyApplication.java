@@ -20,10 +20,21 @@ import io.swagger.v3.oas.models.info.Info;
  */
 @SpringBootApplication
 @EnableMongoRepositories
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class CompanyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CompanyApplication.class, args);
+	}
+	
+	@Bean
+	public WebMvcConfigurer configurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");
+			}
+		};
 	}
 
 	@Autowired
