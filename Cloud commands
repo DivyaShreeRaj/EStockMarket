@@ -13,3 +13,162 @@ docker login: Login to your dockerhub account
 docker tag local-image:version your_docker_user/your_docker_repo:v1  ---> Tag the locally created image to docker hub
 docker push your_docker_user/your_docker_repo:v1 --> Push the image to docker hub
 
+================================================================
+AZURE
+================================================================
+
+Login into : http://portal.azure.com
+
+
+A) Create Container Instance for deploying 'Axon server'
+==========================================================
+How to deploy docker hub image to Azure for Java application?
+Home -> Create a resource -> Container Instances
+Step 1. Select resource group. Example: DivyaResourceGroup1
+Step 2. Provide Container name. Example: estockmarket-axon-container-instance
+Step 3. Select region. Example: East US
+Step 4. Image source as 'Other registry' 
+Step 5. Image type: 'Public'
+Step 6. Image : 'divyashreeraj69/emsaxonrepo'
+Step 7. OS type: Linux
+Step 8. DNS label name: ems-axon
+Step 9. Expose TCP Ports : 8024 - TCP and  8124 - TCP
+Step 10. Review + Create
+
+Below is the DNS name that can be used to verify deployment: ems-axon.eastus.azurecontainer.io
+http://ems-axon.eastus.azurecontainer.io:8024/
+http://20.124.138.250:8024/
+
+
+B) Create Azure Database for MySql to Deploy MySql in Azure
+=====================================================================
+
+Create Resource -> Azure Database for MySql
+Select Flexible server
+Step 1. Select resource group. Example: DivyaResourceGroup1	
+Step 2 Provide server name: ems-mysql-azure-server
+Step 3. Select Region as: East US
+Step 4. Username : ems_user
+Step 5. Password: pass@word1
+Step 6: public access
+Step 7: Select "Allow public access from any Azure service within Azure to this server"
+Step 8: Add current ip address
+Step 9. Reviw + Create
+
+Now open mySql workbench and test the above connection
+hostname: ems-mysql-azure-server.mysql.database.azure.com
+port: 3306
+username: ems_user
+password: pass@word1
+
+We can now create database and tables, and insert few data for company and stock
+Try connecting to this server from java microservice application
+
+
+C) Create Container Instance for deploying 'Company' microservice
+================================================================
+How to deploy docker hub image to Azure for Java application?
+Home -> Create a resource -> Container Instances
+Step 1. Select resource group. Example: DivyaResourceGroup1
+Step 2. Provide Container name. Example: estockmarket-company-container-instance
+Step 3. Select region. Example: East US
+Step 4. Image source as 'Other registry' 
+Step 5. Image type: 'Public'
+Step 6. Image : 'divyashreeraj69/emsdockerhubrepo:v1'
+Step 7. OS type: Linux
+Step 8. DNS label name: company
+Step 9. Expose TCP Ports : 8081 - TCP
+Step 10. Review + Create
+
+Below is the DNS name that can be used to verify deployment : company.eastus.azurecontainer.io
+http://company.eastus.azurecontainer.io/swagger-ui/index.html
+http://company.eastus.azurecontainer.io:8081/swagger-ui/index.html
+http://20.121.95.37:8081/swagger-ui/index.html
+
+
+D) Create Container Instance for deploying 'Stock' microservice
+================================================================
+How to deploy docker hub image to Azure for Java application?
+Home -> Create a resource -> Container Instances
+Step 1. Select resource group. Example: DivyaResourceGroup1
+Step 2. Provide Container name. Example: estockmarket-stock-container-instance
+Step 3. Select region. Example: East US
+Step 4. Image source as 'Other registry' 
+Step 5. Image type: 'Public'
+Step 6. Image : 'divyashreeraj69/emsdockerhubstockrepo:v1'
+Step 7. OS type: Linux
+Step 8. DNS label name: stock
+Step 9. Expose TCP Ports : 8082 - TCP
+Step 10. Review + Create
+
+Below is the DNS name that can be used to verify deployment : stock.eastus.azurecontainer.io
+http://stock.eastus.azurecontainer.io/swagger-ui/index.html
+http://stock.eastus.azurecontainer.io:8082/swagger-ui/index.html
+http://20.241.151.27:8082/swagger-ui/index.html
+
+
+E) Create Azure Web App Services for deploying 'EStockMarket Angular Application
+=========================================================================
+Home -> Create a resoucre ->  App Services
+Step 1. Select resource group. Example: DivyaResourceGroup1	
+Step 2. Provide Web App name. Example: estock-market-web-app
+Step 3. Select Publish as 'Docker Container'
+Step 4. OS type: Linux
+Step 5. Select region. Example: East US
+Step 6. Options: 'Single Container'
+Step 7. Image source: 'Docker Hub'
+Step 8. Access Type: 'Public'
+Step 9. Image and tag: 'divyashreeraj69/angular-app:latest'
+Step 10. Review + Create
+Below is the URL that can be used to verify deployment :
+https://estock-market-web-app.azurewebsites.net/
+
+
+======================================================================================
+COMMAND LINE
+========================================================================================
+
+$docker login --username=your_docker_user_name
+$docker login --username=divyashreeraj69
+
+A ) pull axonserver docker image:
+=========================================
+docker pull axoniq/axonserver
+docker pull axoniq/axonserver:4.5.13-jdk-8-dev-nonroot
+
+docker run -p 8024:8024 -p 8124:8124 axoniq/axonserver:4.5.13-jdk-8-dev-nonroot
+OR
+docker run -d --name marketaxonserver -p 8024:8024 -p 8124:8124 axoniq/axonserver:4.5.13-jdk-8-dev-nonroot
+OR
+docker run -p 8024:8024 -p 8124:8124 --name marketaxonserver --hostname marketaxonserver -e AXONSERVER_HOSTNAME=marketaxonserver axoniq/axonserver:4.5.13-jdk-8-dev-nonroot
+
+docker tag axoniq/axonserver:4.5.13-jdk-8-dev-nonroot divyashreeraj69/emsaxonrepo
+docker push  divyashreeraj69/emsaxonrepo:latest
+
+B) Create Docker Image for Company Service
+============================================
+
+docker build -t company-service-docker-image .
+docker run --name company -p 8081:8081 company-service-docker-image
+docker tag company-service-docker-image:latest divyashreeraj69/emsdockerhubrepo:v1
+docker push divyashreeraj69/emsdockerhubrepo:v1
+
+C) Create Docker Image for Stock Service
+============================================
+
+C:\Users\User\git\EStockMarket1\stock>docker build -t stock-service-docker-image .
+C:\Users\User\git\EStockMarket1\stock>docker images
+C:\Users\User\git\EStockMarket1\stock>docker run --name stock -p 8082:8082 stock-service-docker-image
+C:\Users\User\git\EStockMarket1\stock>docker tag stock-service-docker-image:latest divyashreeraj69/emsdockerhubstockrepo:v1
+C:\Users\User\git\EStockMarket1\stock>docker push divyashreeraj69/emsdockerhubstockrepo:v1
+
+D) Create Docker Image for Angular Project
+===========================================
+
+copy docker file into root folder of angular proj
+docker build -t esm-angular-image .
+docker run -p 4200:4200 esm-angular-image
+docker build -t divyashreeraj69/angular-app:latest .
+docker push divyashreeraj69/angular-app:latest
+
+
