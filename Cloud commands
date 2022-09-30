@@ -1,0 +1,15 @@
+General Docker Commands
+----------------------------
+
+docker create : We can create a new container.
+docker ps : This command allows us to list all running containers on the Docker Host.
+docker start : We can start any stopped container.
+docker stop : We can stop any started container with the first few unique characters like docker start command.
+docker run : This command is combination of docker create and docker start commands. It creates a container and then it starts the container.
+docker rm : If we want to delete a container, we can use it.
+docker images : This commands lists all images which present on the Docker Host.
+docker rmi : We can delete an image with this command.
+docker login: Login to your dockerhub account
+docker tag local-image:version your_docker_user/your_docker_repo:v1  ---> Tag the locally created image to docker hub
+docker push your_docker_user/your_docker_repo:v1 --> Push the image to docker hub
+
