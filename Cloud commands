@@ -172,3 +172,23 @@ docker build -t divyashreeraj69/angular-app:latest .
 docker push divyashreeraj69/angular-app:latest
 
 
+
+=========================================================
+To Resolve Index issue in getByCompanyCode api:
+Rootcause: Within the api where we get company details by company code, we also fetch latest stock price data of the company code.
+            This is done by sorting based on the fields stockStartDate and stockStartTime of 'stock' database.
+            Mongo DB creates indexs for all the individual fields of the databases by default, but for composite fields indexes has to be created manually.
+Solution: 
+          Connect to Mongo DB via azure shell command shown below and create index
+             connect('mongodb://estockmarket-cosmos-mongo:gQ5Q9FmXvjeByEgfe97D4OtX7Ov36gzZhPH57Q8xu2DcA5IdmmmEaGt7VUluIl9tVX3OFXdKFd7lT71VYn7lbg==@estockmarket-cosmos-mongo.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@estockmarket-cosmos-mongo@')
+             db.stock.createIndex({stockStartDate:-1,stockStartTime:-1})
+          (OR)
+          -> Connect to the Mongo DB from MongoDB Desktop using the primary connection string.
+          -> Select 'stock' DB from your collection
+          -> Navigate to Indexes
+          -> Click on Create (+) button
+          -> Add field names (stockStartDate,stockStartTime) in the desc order (-1).
+          -> Save
+          
+            
+         
